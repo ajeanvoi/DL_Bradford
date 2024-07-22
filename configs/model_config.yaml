@@ -1,0 +1,31 @@
+model_V1:
+  input_size: 13
+  hidden_layer1_size: 64
+  hidden_layer2_size: 128
+  num_classes: 10
+  learning_rate: 0.001
+  num_epochs: 8
+
+model_V2:
+  input_size: 13
+  hidden_layer1_size: 128
+  hidden_layer2_size: 64
+  num_classes: 10
+  learning_rate: 0.001
+  num_epochs: 8
+
+model_V3:
+  input_size: 13
+  hidden_layer1_size: 128
+  hidden_layer2_size: 256
+  num_classes: 10
+  learning_rate: 0.001
+  num_epochs: 8
+
+model_V3_augmented:
+  input_size: 10
+  hidden_layer1_size: 128
+  hidden_layer2_size: 256
+  num_classes: 10
+  learning_rate: 0.0001
+  num_epochs: 8
