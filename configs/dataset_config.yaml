@@ -1,8 +1,8 @@
 dataset:
-  train_path: 'data/processed/train/V12_feat_train.txt'
-  val_path: "data/processed/val/V12_feat_val.txt"
-  test_path: "data/processed/test/V12_feat_test.txt"
-  batch_size: 16
+  train_path: 'DL_Bradford/data/processed/train/V12_feat_train.txt'
+  val_path: "DL_Bradford/data/processed/val/V12_feat_val.txt"
+  test_path: "DL_Bradford/data/processed/test/V12_feat_test.txt"
+  batch_size: 64
 
 augmentation:
   enabled: true
