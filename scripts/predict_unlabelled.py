@@ -16,17 +16,9 @@ from models.modelV3_augmented import ResNetPointNet  # Utilisation de la version
 
 def load_raw_data(raw_data_path):
     # Lire les données brutes (non normalisées) depuis le fichier CSV
-    raw_df = pd.read_csv(raw_data_path)
+    raw_df = pd.read_csv(raw_data_path, sep=' ')
     # Extraire les coordonnées x, y, z, r, g, b
-    raw_df = raw_df.rename(columns={
-        '//X': 'x',
-        'Y': 'y',
-        'Z': 'z',
-        'Rf': 'r',
-        'Gf': 'g',
-        'Bf': 'b'
-    })
-    points = raw_df[['x', 'y', 'z', 'r', 'g', 'b']].values
+    points = raw_df[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf']].values
     return points
 
 def predict_and_save(model, dataloader, device, model_name, raw_data_path, output_path):
@@ -45,6 +37,8 @@ def predict_and_save(model, dataloader, device, model_name, raw_data_path, outpu
 
     classes_reverse = {v: k for k, v in classes.items()}
     model.to(device)
+
+    # Utiliser model.predict
     model.eval()
 
     all_preds = []
@@ -53,8 +47,7 @@ def predict_and_save(model, dataloader, device, model_name, raw_data_path, outpu
     with torch.no_grad():
         for inputs in dataloader:
             inputs = inputs.to(device)
-            outputs = model(inputs)
-            _, preds = torch.max(outputs, 1)
+            preds = model.predict(inputs)  # Utiliser la méthode predict
 
             all_preds.extend(preds.cpu().numpy())
             all_points.extend(inputs.cpu().numpy())
@@ -64,13 +57,14 @@ def predict_and_save(model, dataloader, device, model_name, raw_data_path, outpu
 
     # Convertir les résultats en DataFrame
     results_df = pd.DataFrame({
-        'x': raw_points[:, 0],
-        'y': raw_points[:, 1],
-        'z': raw_points[:, 2],
-        'r': raw_points[:, 3],
-        'g': raw_points[:, 4],
-        'b': raw_points[:, 5],
-        'Predicted': [classes_reverse[p] for p in all_preds],
+        '//X': raw_points[:, 0],
+        'Y': raw_points[:, 1],
+        'Z': raw_points[:, 2],
+        'Rf': raw_points[:, 3],
+        'Gf': raw_points[:, 4],
+        'Bf': raw_points[:, 5],
+        # # 'Predicted': [classes_reverse[p] for p in all_preds],
+        'Predicted': all_preds,  # Utiliser les classes numériques
     })
 
     # Enregistrer les résultats
@@ -92,7 +86,7 @@ if dataset_config['augmentation']['enabled']:
     augmentations = dataset_config['augmentation']['augmentations']
 
 # Charger les données non étiquetées
-test_dataset = PointCloudDataset(dataset_config['dataset']['test_path'], augmentations=augmentations)
+test_dataset = PointCloudDataset(dataset_config['dataset']['test_path'], augmentations=augmentations, has_labels=False)
 test_loader = DataLoader(test_dataset, batch_size=dataset_config['dataset']['batch_size'], shuffle=False)
 
 # Charger le modèle
@@ -104,13 +98,13 @@ model = ResNetPointNet(
 )
 
 # Charger les poids du modèle
-model_name = 'model_FL_alpha_0.422_gamma_1.528_BA_0.3945_F1_0.5887'
+model_name = 'model_FL_alpha_0.250_gamma_2.000'
 checkpoint_path = os.path.join(repo_path, 'checkpoints', f'{model_name}.pth')
-checkpoint = torch.load(checkpoint_path)
+checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
 model.load_state_dict(checkpoint)
 
 # Chemin de sortie pour les prédictions
-output_path = 'results/predictions/predictions_unlabelled.csv'
+output_path = 'results/predictions/predictions_unlabelled_' + model_name + '_.csv'
 
 # Chemin vers les données brutes pour les coordonnées
 raw_data_path = dataset_config['dataset']['raw_path']

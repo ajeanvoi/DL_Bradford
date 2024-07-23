@@ -56,3 +56,10 @@ class ResNetPointNet(nn.Module):
         
         x = self.fc_final(x)
         return x
+
+    def predict(self, inputs):
+        self.eval() # Set the model to evaluation mode
+        with torch.no_grad():
+            outputs = self.forward(inputs)
+            _, preds = torch.max(outputs, 1)
+        return preds

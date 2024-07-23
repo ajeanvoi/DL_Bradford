@@ -23,7 +23,7 @@ model_V3:
   num_epochs: 8
 
 model_V3_augmented:
-  input_size: 10
+  input_size: 13
   hidden_layer1_size: 128
   hidden_layer2_size: 256
   num_classes: 10

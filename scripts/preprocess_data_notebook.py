@@ -21,6 +21,9 @@ def load_data(input_dir):
     data_frames = []
     for file_name in os.listdir(input_dir):
         file_path = os.path.join(input_dir, file_name)
+        if os.path.isdir(file_path):
+            print(f'Skipping directory: {file_path}')
+            continue
         print(f'Loading file: {file_path}')
         df = pd.read_csv(file_path)
         print(f'Loaded {file_name}, columns: {df.columns}')
@@ -73,7 +76,8 @@ def preprocess_file(file_path, columns_to_keep):
     
     data = data[columns_to_keep]
     print(f'Data shape after selecting columns: {data.shape}')
-    data = data.dropna()
+    #data = data.dropna()
+    data = data.fillna(method='ffill')
     print(f'Data shape after dropping NA: {data.shape}')
     
     # Normaliser les coordonnées et les couleurs
@@ -127,6 +131,9 @@ def preprocess_data(input_dir, output_dir, balance=False, isTesting=False):
     print(f'Processing files in {input_dir}, saving to {output_dir}, balance={balance}, isTesting={isTesting}')
     for file_name in os.listdir(input_dir):
         file_path = os.path.join(input_dir, file_name)
+        if os.path.isdir(file_path):
+            print(f'Skipping directory: {file_path}')
+            continue
         print(f'Processing file: {file_path}')
         data = preprocess_file(file_path, columns_to_keep)
         if balance:
