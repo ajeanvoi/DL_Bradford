@@ -9,6 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import sys
 
 # Ajouter le chemin du dépôt au sys.path
 repo_path = '/content/DL_Bradford'

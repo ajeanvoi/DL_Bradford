@@ -4,20 +4,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.utils import resample
 
-# Dictionnaire pour mapper les valeurs numériques des classes à des noms de classes
-# class_names = {
-#     0: 'arch',
-#     1: 'columns',
-#     2: 'moldings',
-#     3: 'floor',
-#     4: 'door & window',
-#     5: 'wall',
-#     6: 'stairs',
-#     7: 'vault',
-#     8: 'roof',
-#     9: 'other',
-# }
-
 # Seperation of door and window, remove vault
 class_names = {'arch': 0,
            'columns': 1,
@@ -61,12 +47,6 @@ def plot_class_distribution(data, title, output_path):
 
 def preprocess_file(file_path, columns_to_keep):
     data = pd.read_csv(file_path, skiprows=1, header=None, sep=' ')
-    # column_names = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 
-    #                 'Planarity_(0.1)', 'Classification', 'Surface_variation_(0.1)', 'Verticality_(0.1)',
-    #                 'PCA1_(0.1)', 'PCA2_(0.1)', '1st_eigenvalue_(0.2)', '2nd_eigenvalue_(0.2)', 
-    #                 '3rd_eigenvalue_(0.2)', 'Number_of_neighbors_(r=1)', 'Omnivariance_(0.2)', 
-    #                 'Planarity_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)', 
-    #                 'Nx', 'Ny', 'Nz']
     column_names = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Original_cloud_index'
                     'Planarity_(0.1)', 'Classification', 'Surface_variation_(0.1)', 'Verticality_(0.1)',
                     'PCA1_(0.1)', 'PCA2_(0.1)', '1st_eigenvalue_(0.2)', '2nd_eigenvalue_(0.2)', 
@@ -105,11 +85,18 @@ def balance_classes(data):
     balanced_data = balanced_data.sample(frac=1).reset_index(drop=True)
     return balanced_data
 
-def preprocess_data(input_dir, output_dir, balance=False):
-    columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 
-                       'Planarity_(0.2)', 'Classification',
+def preprocess_data(input_dir, output_dir, balance=False, isTesting = False):
+
+    if (isTesting):
+        columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 
+                       'Planarity_(0.2)',
                        '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
                        'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']
+    else:
+        columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 
+                       'Planarity_(0.2)', 'Classification',
+                       '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
+                       'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)'] 
     for file_name in os.listdir(input_dir):
         file_path = os.path.join(input_dir, file_name)
         data = preprocess_file(file_path, columns_to_keep)
@@ -122,32 +109,32 @@ if __name__ == "__main__":
     visualization_dir = 'results/visualizations'
     os.makedirs(visualization_dir, exist_ok=True)
     
-    print('Preprocessing and visualizing training data...')
-    raw_train_data = load_data('data/raw/train')
-    plot_class_distribution(raw_train_data, 'Raw Training Data Class Distribution', 
-                            os.path.join(visualization_dir, 'raw_training_data_distribution.png'))
+    # print('Preprocessing and visualizing training data...')
+    # raw_train_data = load_data('data/raw/train')
+    # plot_class_distribution(raw_train_data, 'Raw Training Data Class Distribution', 
+    #                         os.path.join(visualization_dir, 'raw_training_data_distribution.png'))
 
-    preprocess_data('data/raw/train', 'data/processed/train', balance=True)
-    processed_train_data = load_data('data/processed/train')
-    plot_class_distribution(processed_train_data, 'Processed Training Data Class Distribution (Balanced)', 
-                            os.path.join(visualization_dir, 'processed_training_data_distribution.png'))
+    # preprocess_data('data/raw/train', 'data/processed/train', balance=True)
+    # processed_train_data = load_data('data/processed/train')
+    # plot_class_distribution(processed_train_data, 'Processed Training Data Class Distribution (Balanced)', 
+    #                         os.path.join(visualization_dir, 'processed_training_data_distribution.png'))
     
-    print('Preprocessing and visualizing validation data...')
-    raw_val_data = load_data('data/raw/val')
-    plot_class_distribution(raw_val_data, 'Raw Validation Data Class Distribution', 
-                            os.path.join(visualization_dir, 'raw_validation_data_distribution.png'))
+    # print('Preprocessing and visualizing validation data...')
+    # raw_val_data = load_data('data/raw/val')
+    # plot_class_distribution(raw_val_data, 'Raw Validation Data Class Distribution', 
+    #                         os.path.join(visualization_dir, 'raw_validation_data_distribution.png'))
     
-    preprocess_data('data/raw/val', 'data/processed/val')
-    processed_val_data = load_data('data/processed/val')
-    plot_class_distribution(processed_val_data, 'Processed Validation Data Class Distribution', 
-                            os.path.join(visualization_dir, 'processed_validation_data_distribution.png'))
+    # preprocess_data('data/raw/val', 'data/processed/val')
+    # processed_val_data = load_data('data/processed/val')
+    # plot_class_distribution(processed_val_data, 'Processed Validation Data Class Distribution', 
+    #                         os.path.join(visualization_dir, 'processed_validation_data_distribution.png'))
 
-    # print('Preprocessing and visualizing test data...')
-    # raw_test_data = load_data('data/raw/test')
+    print('Preprocessing test data...')
+    #raw_test_data = load_data('data/raw/test')
     # plot_class_distribution(raw_test_data, 'Raw Test Data Class Distribution', 
     #                         os.path.join(visualization_dir, 'raw_test_data_distribution.png'))
     
-    # preprocess_data('data/raw/test', 'data/processed/test')
+    preprocess_data('data/raw/test', 'data/processed/test', isTesting = True)
     # processed_test_data = load_data('data/processed/test')
     # plot_class_distribution(processed_test_data, 'Processed Test Data Class Distribution', 
     #                         os.path.join(visualization_dir, 'processed_test_data_distribution.png'))
