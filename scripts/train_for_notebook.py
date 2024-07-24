@@ -20,7 +20,8 @@ from scripts.sigmoidFocalLoss import SigmoidFocalLoss
 from data.custom_dataset import PointCloudDataset
 from models.my_model import PointNet
 from models.modelV2 import ImprovedPointNet
-from models.modelV3_augmented import ResNetPointNet  # Remove augmented if you want to use the non-augmented version
+# from models.modelV3_augmented import ResNetPointNet  # Remove augmented if you want to use the non-augmented version
+from models.model_V4 import DeeperResNetPointNet
 
 # Utilisation : python scripts/train_with_augmentation.py --alpha 0.285 --gamma 2.158
 
@@ -111,7 +112,7 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_dataset, batch_size=dataset_config['dataset']['batch_size'], shuffle=False)
 
     # Parameters for the model
-    model_name = 'model_V3_augmented'
+    model_name = 'model_V4'
     save_path = os.path.join(repo_path, 'checkpoints/')
     os.makedirs(save_path, exist_ok=True)
 
@@ -143,11 +144,19 @@ if __name__ == "__main__":
             gamma = random.uniform(*gamma_range)
         
         print(f'Training with alpha={alpha:.3f}, gamma={gamma:.3f}')
-        model = ResNetPointNet(
-            model_config['model_V3_augmented']['input_size'],
-            model_config['model_V3_augmented']['hidden_layer1_size'],
-            model_config['model_V3_augmented']['hidden_layer2_size'],
-            model_config['model_V3_augmented']['num_classes']
+        # model = ResNetPointNet(
+        #     model_config['model_V3_augmented']['input_size'],
+        #     model_config['model_V3_augmented']['hidden_layer1_size'],
+        #     model_config['model_V3_augmented']['hidden_layer2_size'],
+        #     model_config['model_V3_augmented']['num_classes']
+        # )
+
+        model = DeeperResNetPointNet(
+            model_config['model_V4']['input_size'],
+            model_config['model_V4']['hidden_layer1_size'],
+            model_config['model_V4']['hidden_layer2_size'],
+            model_config['model_V4']['num_classes'],
+            model_config['model_V4']['num_res_blocks']
         )
 
         criterion = SigmoidFocalLoss(alpha=alpha, gamma=gamma, reduction='mean')
@@ -162,7 +171,7 @@ if __name__ == "__main__":
         # Save each model with alpha, gamma, balanced_accuracy, and f1 in the filename
         model_save_path = os.path.join(
             # save_path, f'model_FL_alpha_{alpha:.3f}_gamma_{gamma:.3f}_BA_{val_balanced_acc:.4f}_F1_{val_f1:.4f}.pth')
-            save_path, f'model_FL_alpha_{alpha:.3f}_gamma_{gamma:.3f}.pth')
+            save_path, f'model_' + model_config['model_V4']['num_res_blocks']  + '_FL_alpha_{alpha:.3f}_gamma_{gamma:.3f}.pth')
         torch.save(model.state_dict(), model_save_path)
         print('Model saved to ' + model_save_path)
         

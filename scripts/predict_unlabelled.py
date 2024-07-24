@@ -12,7 +12,8 @@ sys.path.append(repo_path)
 
 # Import des scripts spécifiques
 from data.custom_dataset import PointCloudDataset
-from models.modelV3_augmented import ResNetPointNet  # Utilisation de la version augmentée
+# from models.modelV3_augmented import ResNetPointNet  # Utilisation de la version augmentée
+from models.model_V4 import DeeperResNetPointNet  # Utilisation de la version augmentée
 
 def load_raw_data(raw_data_path):
     # Lire les données brutes (non normalisées) depuis le fichier CSV
@@ -90,21 +91,32 @@ test_dataset = PointCloudDataset(dataset_config['dataset']['test_path'], augment
 test_loader = DataLoader(test_dataset, batch_size=dataset_config['dataset']['batch_size'], shuffle=False)
 
 # Charger le modèle
-model = ResNetPointNet(
-    model_config['model_V3_augmented']['input_size'],
-    model_config['model_V3_augmented']['hidden_layer1_size'],
-    model_config['model_V3_augmented']['hidden_layer2_size'],
-    model_config['model_V3_augmented']['num_classes']
+# model = ResNetPointNet(
+#     model_config['model_V3_augmented']['input_size'],
+#     model_config['model_V3_augmented']['hidden_layer1_size'],
+#     model_config['model_V3_augmented']['hidden_layer2_size'],
+#     model_config['model_V3_augmented']['num_classes']
+# )
+
+model = DeeperResNetPointNet(
+    model_config['model_V4']['input_size'],
+    model_config['model_V4']['hidden_layer1_size'],
+    model_config['model_V4']['hidden_layer2_size'],
+    model_config['model_V4']['num_classes'],
+    model_config['model_V4']['num_res_blocks']
 )
 
 # Charger les poids du modèle
-model_name = 'model_FL_alpha_0.250_gamma_2.000'
+model_name = 'model_' + model_config['model_V4']['num_res_blocks'] + '_FL_alpha_0.250_gamma_2.000'
 checkpoint_path = os.path.join(repo_path, 'checkpoints', f'{model_name}.pth')
 checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
 model.load_state_dict(checkpoint)
 
 # Chemin de sortie pour les prédictions
 output_path = 'results/predictions/predictions_unlabelled_' + model_name + '_.csv'
+
+# Créer le dossier de sortie si nécessaire
+os.makedirs(os.path.dirname('results/predictions/'), exist_ok=True)
 
 # Chemin vers les données brutes pour les coordonnées
 raw_data_path = dataset_config['dataset']['raw_path']

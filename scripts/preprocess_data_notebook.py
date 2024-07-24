@@ -32,26 +32,26 @@ def load_data(input_dir):
     print(f'Combined data shape: {data.shape}')
     return data
 
-def plot_class_distribution(data, title, output_path):
-    plt.figure(figsize=(10, 6))
-    if 'Classification' in data.columns:
-        print(f'Plotting class distribution for {title}')
-        data['ClassName'] = data['Classification'].map(class_names)
-        class_counts = data['ClassName'].value_counts(normalize=True) * 100
-        print(f'Class distribution:\n{class_counts}')
-        sns.barplot(x=class_counts.index, y=class_counts.values)
-        plt.title(title)
-        plt.xlabel('Classes')
-        plt.ylabel('Frequency (%)')
-        plt.xticks(rotation=45)
-        for i, v in enumerate(class_counts.values):
-            plt.text(i, v + 0.5, f"{v:.2f}%", ha='center', va='bottom')
-        plt.tight_layout()
-        plt.savefig(output_path)
-        print(f'Saved plot to {output_path}')
-        plt.close()
-    else:
-        print(f"Error: 'Classification' column not found in data for {title}")
+# def plot_class_distribution(data, title, output_path):
+#     plt.figure(figsize=(10, 6))
+#     if 'Classification' in data.columns:
+#         print(f'Plotting class distribution for {title}')
+#         data['ClassName'] = data['Classification'].map(class_names)
+#         class_counts = data['ClassName'].value_counts(normalize=True) * 100
+#         print(f'Class distribution:\n{class_counts}')
+#         sns.barplot(x=class_counts.index, y=class_counts.values)
+#         plt.title(title)
+#         plt.xlabel('Classes')
+#         plt.ylabel('Frequency (%)')
+#         plt.xticks(rotation=45)
+#         for i, v in enumerate(class_counts.values):
+#             plt.text(i, v + 0.5, f"{v:.2f}%", ha='center', va='bottom')
+#         plt.tight_layout()
+#         plt.savefig(output_path)
+#         print(f'Saved plot to {output_path}')
+#         plt.close()
+#     else:
+#         print(f"Error: 'Classification' column not found in data for {title}")
 
 def preprocess_file(file_path, columns_to_keep):
     print(f'Preprocessing file: {file_path}')
@@ -77,7 +77,13 @@ def preprocess_file(file_path, columns_to_keep):
     data = data[columns_to_keep]
     print(f'Data shape after selecting columns: {data.shape}')
     #data = data.dropna()
-    data = data.fillna(method='ffill')
+
+    # Modification sur les données raw
+    data.fillna(method='ffill', inplace=True)
+    data.reset_index(drop=True, inplace=True)
+    # data.dropna(inplace=True)
+    # data.reset_index(drop=True, inplace=True)
+
     print(f'Data shape after dropping NA: {data.shape}')
     
     # Normaliser les coordonnées et les couleurs

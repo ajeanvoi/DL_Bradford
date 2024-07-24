@@ -136,7 +136,7 @@ model = ResNetPointNet(
 
 model_name = 'model_FL_alpha_0.422_gamma_1.528_BA_0.3945_F1_0.5887'
 checkpoint_path = os.path.join(repo_path, 'checkpoints', f'{model_name}.pth')
-checkpoint = torch.load(checkpoint_path)
+checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
 model.load_state_dict(checkpoint)
 
 criterion = SigmoidFocalLoss(alpha=0.422, gamma=1.528, reduction='mean')
