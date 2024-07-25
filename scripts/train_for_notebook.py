@@ -171,7 +171,7 @@ if __name__ == "__main__":
         # Save each model with alpha, gamma, balanced_accuracy, and f1 in the filename
         model_save_path = os.path.join(
             # save_path, f'model_FL_alpha_{alpha:.3f}_gamma_{gamma:.3f}_BA_{val_balanced_acc:.4f}_F1_{val_f1:.4f}.pth')
-            save_path, f'model_' + model_config['model_V4']['num_res_blocks']  + '_FL_alpha_{alpha:.3f}_gamma_{gamma:.3f}.pth')
+            save_path, f'model_' + str(model_config['model_V4']['num_res_blocks'])  + '_FL_alpha_{alpha:.3f}_gamma_{gamma:.3f}.pth')
         torch.save(model.state_dict(), model_save_path)
         print('Model saved to ' + model_save_path)
         

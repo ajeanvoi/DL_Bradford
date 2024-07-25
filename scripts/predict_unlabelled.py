@@ -107,7 +107,7 @@ model = DeeperResNetPointNet(
 )
 
 # Charger les poids du modèle
-model_name = 'model_' + model_config['model_V4']['num_res_blocks'] + '_FL_alpha_0.250_gamma_2.000'
+model_name = 'model_' + str(model_config['model_V4']['num_res_blocks']) + '_FL_alpha_0.250_gamma_2.000'
 checkpoint_path = os.path.join(repo_path, 'checkpoints', f'{model_name}.pth')
 checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
 model.load_state_dict(checkpoint)
