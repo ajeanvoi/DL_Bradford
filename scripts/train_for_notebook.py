@@ -40,8 +40,8 @@ def train_model(model, dataloader, criterion, optimizer, num_epochs, device):
         for inputs, labels in dataloader:
             inputs, labels = inputs.to(device), labels.to(device)
             labels = nn.functional.one_hot(labels, num_classes=model.num_classes).float()
-            print(f'Input shape: {inputs.shape}')
-            print(f'Labels shape: {labels.shape}')
+            # print(f'Input shape: {inputs.shape}')
+            # print(f'Labels shape: {labels.shape}')
             optimizer.zero_grad()
             outputs = model(inputs)
             loss = criterion(outputs, labels)
