@@ -5,24 +5,35 @@ import numpy as np
 import random
 
 class PointCloudDataset(Dataset):
-    def __init__(self, csv_file, augmentations=None):
+    def __init__(self, csv_file, augmentations=None, has_labels=True):
         self.data = pd.read_csv(csv_file)
+        print("Colonnes du DataFrame chargé : ", self.data.columns)  # Afficher les colonnes du DataFrame
+        if has_labels:
+            self.data = self.data.dropna(subset=['Classification'])
         self.augmentations = augmentations
+        self.has_labels = has_labels
 
     def __len__(self):
         return len(self.data)
-
+    
     def __getitem__(self, idx):
         sample = self.data.iloc[idx]
-        features = sample[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 
+        features = sample[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf',
                            'Planarity_(0.2)', '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
                            'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']].values
-        label = sample['Classification']
+        
+        features = features.astype(float)  # Assurez-vous que les valeurs sont des floats
 
-        if self.augmentations:
-            features = self.augment_point_cloud(features)
-
-        return torch.tensor(features, dtype=torch.float32), torch.tensor(label, dtype=torch.long)
+        if self.has_labels:
+            label = sample['Classification']
+            try:
+                label = int(label)
+            except ValueError:
+                raise ValueError(f"Label is not an integer at index {idx}: {label}")
+            return torch.tensor(features, dtype=torch.float32), torch.tensor(label, dtype=torch.long)
+        else:
+            # Si les labels ne sont pas disponibles, retourner uniquement les caractéristiques
+            return torch.tensor(features, dtype=torch.float32)
 
     def augment_point_cloud(self, point_cloud):
         if self.augmentations is not None:
@@ -45,17 +56,17 @@ class PointCloudDataset(Dataset):
                                         [0, 0, 1]])
         else:
             raise ValueError('Unsupported rotation axis')
-        point_cloud[:3] = np.dot(point_cloud[:3], rotation_matrix)
+        point_cloud[:, :3] = np.dot(point_cloud[:, :3], rotation_matrix)
         return point_cloud
 
     def random_jitter(self, point_cloud, std):
-        jitter = np.random.normal(0, std, point_cloud[:3].shape)
-        point_cloud[:3] += jitter
+        jitter = np.random.normal(0, std, point_cloud[:, :3].shape)
+        point_cloud[:, :3] += jitter
         return point_cloud
 
     def random_scale(self, point_cloud, scale_range):
         scale = random.uniform(scale_range[0], scale_range[1])
-        point_cloud[:3] *= scale
+        point_cloud[:, :3] *= scale
         return point_cloud
 
     def random_dropout(self, point_cloud, drop_rate):

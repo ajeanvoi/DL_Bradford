@@ -106,7 +106,7 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_dataset, batch_size=dataset_config['dataset']['batch_size'], shuffle=True)
     
     val_dataset = PointCloudDataset(dataset_config['dataset']['val_path'], augmentations=augmentations)
-    val_loader = DataLoader(val_dataset, batch_size=dataset_config['dataset']['batch_size'], shuffle=False)
+    val_loader = DataLoader(val_dataset, batch_size=dataset_config['dataset']['batch_size'], shuffle=True)
 
     # Parameters for the model
     model_name = 'model_V3_augmented'

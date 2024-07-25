@@ -33,8 +33,8 @@ class DeeperResNetPointNet(nn.Module):
         self.fc_initial = nn.Linear(input_size, hidden_layer1_size)
         self.bn_initial = nn.BatchNorm1d(hidden_layer1_size)
         
-        self.res_blocks = nn.ModuleList([ResNetBlock(hidden_layer1_size, hidden_layer2_size) for _ in range(num_res_blocks)])
-        
+        self.res_blocks = nn.ModuleList([ResNetBlock(hidden_layer1_size, hidden_layer1_size) for _ in range(num_res_blocks - 1)])
+        self.res_blocks.append(ResNetBlock(hidden_layer1_size, hidden_layer2_size))
         self.fc_final = nn.Linear(hidden_layer2_size, num_classes)
 
     def forward(self, x):
