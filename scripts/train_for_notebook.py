@@ -22,7 +22,6 @@ from models.my_model import PointNet
 from models.modelV2 import ImprovedPointNet
 # from models.modelV3_augmented import ResNetPointNet  # Remove augmented if you want to use the non-augmented version
 from models.model_V4 import DeeperResNetPointNet
-from models.model_V5 import PointNetPP
 
 
 # Utilisation : python scripts/train_with_augmentation.py --alpha 0.285 --gamma 2.158
@@ -41,7 +40,8 @@ def train_model(model, dataloader, criterion, optimizer, num_epochs, device):
         for inputs, labels in dataloader:
             inputs, labels = inputs.to(device), labels.to(device)
             labels = nn.functional.one_hot(labels, num_classes=model.num_classes).float()
-
+            print(f'Input shape: {inputs.shape}')
+            print(f'Labels shape: {labels.shape}')
             optimizer.zero_grad()
             outputs = model(inputs)
             loss = criterion(outputs, labels)
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_dataset, batch_size=dataset_config['dataset']['batch_size'], shuffle=False)
 
     # Parameters for the model
-    model_name = 'model_V5' # Change this to the model you want to use
+    model_name = 'model_V4' # Change this to the model you want to use
     save_path = os.path.join(repo_path, 'checkpoints/')
     os.makedirs(save_path, exist_ok=True)
 
@@ -153,15 +153,15 @@ if __name__ == "__main__":
         #     model_config['model_V3_augmented']['num_classes']
         # )
 
-        # model = DeeperResNetPointNet(
-        #     model_config['model_V4']['input_size'],
-        #     model_config['model_V4']['hidden_layer1_size'],
-        #     model_config['model_V4']['hidden_layer2_size'],
-        #     model_config['model_V4']['num_classes'],
-        #     model_config['model_V4']['num_res_blocks']
-        # )
+        model = DeeperResNetPointNet(
+            model_config['model_V4']['input_size'],
+            model_config['model_V4']['hidden_layer1_size'],
+            model_config['model_V4']['hidden_layer2_size'],
+            model_config['model_V4']['num_classes'],
+            model_config['model_V4']['num_res_blocks']
+        )
 
-        model = PointNetPP(num_classes=model_config['model_V5']['num_classes'])
+        # model = PointNetPP(num_classes=model_config['model_V5']['num_classes'])
 
         criterion = SigmoidFocalLoss(alpha=alpha, gamma=gamma, reduction='mean')
         optimizer = optim.Adam(model.parameters(), lr=model_config[model_name]['learning_rate'])
@@ -175,7 +175,7 @@ if __name__ == "__main__":
         # Save each model with alpha, gamma, balanced_accuracy, and f1 in the filename
         model_save_path = os.path.join(
             # save_path, f'model_FL_alpha_{alpha:.3f}_gamma_{gamma:.3f}_BA_{val_balanced_acc:.4f}_F1_{val_f1:.4f}.pth')
-            save_path, f'model_V5_FL_alpha_{alpha:.3f}_gamma_{gamma:.3f}.pth')
+            save_path, f'model_V4_FL_alpha_{alpha:.3f}_gamma_{gamma:.3f}.pth')
         torch.save(model.state_dict(), model_save_path)
         print('Model saved to ' + model_save_path)
         

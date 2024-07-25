@@ -33,16 +33,14 @@ class DeeperResNetPointNet(nn.Module):
         self.fc_initial = nn.Linear(input_size, hidden_layer1_size)
         self.bn_initial = nn.BatchNorm1d(hidden_layer1_size)
         
-        # Add more ResNet blocks
-        self.res_blocks = nn.ModuleList([ResNetBlock(hidden_layer1_size, hidden_layer1_size) for _ in range(num_res_blocks)])
+        self.res_blocks = nn.ModuleList([ResNetBlock(hidden_layer1_size, hidden_layer2_size) for _ in range(num_res_blocks)])
         
-        self.fc_final = nn.Linear(hidden_layer1_size, num_classes)
+        self.fc_final = nn.Linear(hidden_layer2_size, num_classes)
 
     def forward(self, x):
         x = x.squeeze(1)
         x = F.relu(self.bn_initial(self.fc_initial(x)))
         
-        # Pass through multiple ResNet blocks
         for block in self.res_blocks:
             x = block(x)
         
@@ -55,3 +53,4 @@ class DeeperResNetPointNet(nn.Module):
             outputs = self.forward(inputs)
             _, preds = torch.max(outputs, 1)
         return preds
+
