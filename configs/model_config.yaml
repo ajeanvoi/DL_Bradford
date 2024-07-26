@@ -32,12 +32,12 @@ model_V3_augmented:
 
 model_V4:
   input_size: 13
-  hidden_layer1_size: 256
-  hidden_layer2_size: 128
+  hidden_layer1_size: 512
+  hidden_layer2_size: 256
   num_classes: 10
   learning_rate: 0.001
-  num_epochs: 20
-  num_res_blocks: 6
+  num_epochs: 15
+  num_res_blocks: 4
 
 model_V5:
   input_size: 13

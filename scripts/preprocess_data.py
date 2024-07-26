@@ -53,7 +53,7 @@ def plot_class_distribution(data, title, output_path):
 def preprocess_file(file_path, columns_to_keep):
     print(f'Preprocessing file: {file_path}')
     data = pd.read_csv(file_path, skiprows=1, header=None, sep=' ')
-    print(f'Initial data shape: {data.shape}')
+    #print(f'Initial data shape: {data.shape}')
     print(f'Initial columns: {data.columns.tolist()}')
     
     column_names = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Original_cloud_index',
@@ -72,16 +72,15 @@ def preprocess_file(file_path, columns_to_keep):
     print(f'Columns after renaming: {data.columns.tolist()}')
     
     data = data[columns_to_keep]
-    print(f'Data shape after selecting columns: {data.shape}')
-    data = data.dropna()
-    print(f'Data shape after dropping NA: {data.shape}')
+    #print(f'Data shape after selecting columns: {data.shape}')
+    #print(f'Data shape after dropping NA: {data.shape}')
     
     # Normaliser les coordonnées et les couleurs
     data[['//X', 'Y', 'Z']] = (data[['//X', 'Y', 'Z']] - data[['//X', 'Y', 'Z']].mean()) / data[['//X', 'Y', 'Z']].std()
     data[['Rf', 'Gf', 'Bf']] = (data[['Rf', 'Gf', 'Bf']] - data[['Rf', 'Gf', 'Bf']].mean()) / data[['Rf', 'Gf', 'Bf']].std()
     
     # Arrondir les valeurs
-    data[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf']] = data[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf']].round()
+    data[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf']] = data[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf']].round(4)
     print(f'Preprocessed data shape: {data.shape}')
     
     return data
