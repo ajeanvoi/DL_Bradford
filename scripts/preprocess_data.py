@@ -52,7 +52,7 @@ def plot_class_distribution(data, title, output_path):
 
 def preprocess_file(file_path, columns_to_keep):
     print(f'Preprocessing file: {file_path}')
-    data = pd.read_csv(file_path, skiprows=1, header=None, sep=' ')
+    data = pd.read_csv(file_path, skiprows=1, header=None, sep=',')
     #print(f'Initial data shape: {data.shape}')
     print(f'Initial columns: {data.columns.tolist()}')
     
@@ -126,6 +126,8 @@ def preprocess_data(input_dir, output_dir, balance=False, isTesting=False):
     print(f'Processing files in {input_dir}, saving to {output_dir}, balance={balance}, isTesting={isTesting}')
     for file_name in os.listdir(input_dir):
         file_path = os.path.join(input_dir, file_name)
+        if not os.path.isfile(file_path):
+          continue
         print(f'Processing file: {file_path}')
         data = preprocess_file(file_path, columns_to_keep)
         if balance:
@@ -133,12 +135,11 @@ def preprocess_data(input_dir, output_dir, balance=False, isTesting=False):
             data = balance_classes(data)
         output_path = os.path.join(output_dir, file_name)
         data.to_csv(output_path, index=False)
-        print(f'Saved preprocessed data to {output_path}')
 
 if __name__ == "__main__":
     # Définir les chemins en fonction de l'environnement Colab
-    base_dir = '/content/DL_Bradford'
-    raw_data_dir = os.path.join(base_dir, 'data/raw')
+    base_dir = ''
+    raw_data_dir = os.path.join(base_dir, 'data/rawSplit')
     processed_data_dir = os.path.join(base_dir, 'data/processed')
     visualization_dir = os.path.join(base_dir, 'results/visualizations')
 
@@ -147,3 +148,14 @@ if __name__ == "__main__":
     # Exemple de prétraitement et visualisation des données de test
     print('Preprocessing test data...')
     preprocess_data(os.path.join(raw_data_dir, 'test'), os.path.join(processed_data_dir, 'test'), isTesting=True)
+
+    # Preprocessing sur train
+    print('Preprocessing train data...')
+    preprocess_data(os.path.join(raw_data_dir, 'train'), os.path.join(processed_data_dir, 'train'), balance=True)
+
+    # Preprocessing sur validation
+    print('Preprocessing validation data...')
+    preprocess_data(os.path.join(raw_data_dir, 'val'), os.path.join(processed_data_dir, 'val'), balance=True)
+
+
+

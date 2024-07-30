@@ -19,6 +19,7 @@ sys.path.append(repo_path)
 from data.custom_dataset import PointCloudDataset
 from models.modelV3_augmented import ResNetPointNet  # Utilisation de la version augmentée
 from scripts.sigmoidFocalLoss import SigmoidFocalLoss
+from models.model_V4 import DeeperResNetPointNet
 
 def evaluate_model(model, dataloader, criterion, device, model_name):
     classes = {
@@ -127,14 +128,22 @@ test_dataset = PointCloudDataset(dataset_config['dataset']['test_path'], augment
 test_loader = DataLoader(test_dataset, batch_size=dataset_config['dataset']['batch_size'], shuffle=False)
 
 # Charger le modèle
-model = ResNetPointNet(
-    model_config['model_V3_augmented']['input_size'],
-    model_config['model_V3_augmented']['hidden_layer1_size'],
-    model_config['model_V3_augmented']['hidden_layer2_size'],
-    model_config['model_V3_augmented']['num_classes']
-)
+# model = ResNetPointNet(
+#     model_config['model_V3_augmented']['input_size'],
+#     model_config['model_V3_augmented']['hidden_layer1_size'],
+#     model_config['model_V3_augmented']['hidden_layer2_size'],
+#     model_config['model_V3_augmented']['num_classes']
+# )
 
-model_name = 'model_FL_alpha_0.422_gamma_1.528_BA_0.3945_F1_0.5887'
+model = DeeperResNetPointNet(
+            model_config['model_V4']['input_size'],
+            model_config['model_V4']['hidden_layer1_size'],
+            model_config['model_V4']['hidden_layer2_size'],
+            model_config['model_V4']['num_classes'],
+            model_config['model_V4']['num_res_blocks']
+        )
+
+model_name = 'model_V4_FL_alpha_0.250_gamma_2.000.pth'
 checkpoint_path = os.path.join(repo_path, 'checkpoints', f'{model_name}.pth')
 checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
 model.load_state_dict(checkpoint)

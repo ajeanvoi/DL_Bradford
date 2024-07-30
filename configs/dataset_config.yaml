@@ -1,10 +1,10 @@
 dataset:
-  train_path: 'DL_Bradford/data/processed/train/stratified_train.csv'
-  val_path: "DL_Bradford/data/processed/val/V12_feat_val.csv"
-  test_path: "DL_Bradford/data/processed/test/V12_UK_feat_pred.txt"
-  # test_path: "DL_Bradford/data/processed/test/stratified_test.csv"
-  raw_path: "DL_Bradford/data/raw/test/V12_UK_feat_pred.txt"
-  batch_size: 64
+  train_path: 'data/processed/train/train.csv'
+  val_path: "data/processed/val/validation.csv"
+  test_path: "data/processed/test/V12_UK_dropNaN_pred_processed.txt"
+  # test_path: "data/processed/test/test.csv"
+  raw_path: "data/raw/test/V12_UK_dropNaN_pred.txt"            
+  batch_size: 256
 
 augmentation:
   enabled: true

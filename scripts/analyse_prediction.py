@@ -19,9 +19,9 @@ def analyze_class_distribution(predictions_path, output_plot_path):
     # Visualiser la distribution des classes
     plt.figure(figsize=(10, 6))
     sns.barplot(x=class_counts.index, y=class_counts.values)
-    plt.title('Distribution des classes prédites')
+    plt.title('Distribution of predicted classes')
     plt.xlabel('Classes')
-    plt.ylabel('Fréquence (%)')
+    plt.ylabel('Frequence (%)')
     plt.xticks(rotation=45)
     for i, v in enumerate(class_counts.values):
         plt.text(i, v + 0.5, f"{v:.2f}%", ha='center', va='bottom')
@@ -29,13 +29,13 @@ def analyze_class_distribution(predictions_path, output_plot_path):
     plt.savefig(output_plot_path)
     plt.show()
 
-model_name = 'model_FL_alpha_0.250_gamma_2.000'
+model_name = 'model_V4_FL_alpha_0.200_gamma_2.000'
 
 # Chemin vers le fichier de prédictions
-predictions_path = '/content/results/predictions/predictions_unlabelled_' + model_name +'_.csv'
+predictions_path = 'results/predictions/last_predictions_unlabelled_' + model_name + '_.csv'
 
 # Chemin pour sauvegarder le graphique
-output_plot_path = '/content/results/predictions/class_distribution_' + model_name +'_.png'
+output_plot_path = 'results/predictions/last_class_distribution_' + model_name + '_.png'
 
 # Analyser la distribution des classes
 analyze_class_distribution(predictions_path, output_plot_path)
