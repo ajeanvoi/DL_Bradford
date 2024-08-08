@@ -122,8 +122,8 @@ def balance_classes(data):
     print(f'Balanced data shape: {balanced_data.shape}')
     return balanced_data
 
-def preprocess_data(input_dir, output_dir, balance=False, isTesting=False):
-    if isTesting:
+def preprocess_data(input_dir, output_dir, balance=False, isPredicting=False):
+    if isPredicting:
         columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 
                            'Planarity_(0.2)',
                            '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
@@ -153,7 +153,7 @@ def preprocess_data(input_dir, output_dir, balance=False, isTesting=False):
         print(f'Saved preprocessed data to {output_path}')
 
 if __name__ == "__main__":
-    # Définir les chemins en fonction de l'environnement Colab
+    # Path assuming that you clone the repository in /content
     base_dir = '/content/DL_Bradford'
     raw_data_dir = os.path.join(base_dir, 'data/raw')
     processed_data_dir = os.path.join(base_dir, 'data/processed')
@@ -161,6 +161,18 @@ if __name__ == "__main__":
 
     os.makedirs(visualization_dir, exist_ok=True)
 
-    # Exemple de prétraitement et visualisation des données de test
+    # Preprocess test data
     print('Preprocessing test data...')
-    preprocess_data(os.path.join(raw_data_dir, 'test'), os.path.join(processed_data_dir, 'test'), isTesting=True)
+    preprocess_data(os.path.join(raw_data_dir, 'test'), os.path.join(processed_data_dir, 'test'))
+
+    # Preprocess train data, if balance=True, the classes will be balanced
+    print('Preprocessing train data...')
+    preprocess_data(os.path.join(raw_data_dir, 'train'), os.path.join(processed_data_dir, 'train'), balance=False)
+
+    # Preprocess validation data
+    print('Preprocessing validation data...')
+    preprocess_data(os.path.join(raw_data_dir, 'validation'), os.path.join(processed_data_dir, 'validation'))
+
+    # Preprocessing predict data
+    print('Preprocessing predict data...')
+    preprocess_data(os.path.join(raw_data_dir, 'predict'), os.path.join(processed_data_dir, 'predict'), isPredicting=True)
