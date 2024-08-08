@@ -31,13 +31,15 @@ model_V3_augmented:
   num_epochs: 12
 
 DeeperResNetPointNet:
-  input_size: 13
-  hidden_layer1_size: 512
-  hidden_layer2_size: 256
+  input_size: 14
+  hidden_layer1_size: 256
+  hidden_layer2_size: 128
   num_classes: 10
   learning_rate: 0.001
   num_epochs: 15
-  num_res_blocks: 4
+  num_res_blocks: 3
+  dropout_rate: 0.3
+  activation: 'relu'
 
 model_V5:
   input_size: 13

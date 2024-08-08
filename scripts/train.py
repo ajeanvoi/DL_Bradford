@@ -38,6 +38,16 @@ def train_model(model, dataloader, criterion, optimizer, num_epochs, device):
 
         for inputs, labels in dataloader:
             inputs, labels = inputs.to(device), labels.to(device)
+
+            print('Num classes : ', model.num_classes)
+
+            # Labels should be in the range [0, num_classes - 1]
+            if labels.max() >= model.num_classes or labels.min() < 0:
+                print("Labels max : ", labels.max())
+                print("Labels min : ", labels.min())
+                raise ValueError(f"Labels out of bounds: found labels outside the range [0, {model.num_classes - 1}]")
+            else:
+                print(f'Labels in range [0, {model.num_classes - 1}]')
             labels = nn.functional.one_hot(labels, num_classes=model.num_classes).float()
             # print(f'Input shape: {inputs.shape}')
             # print(f'Labels shape: {labels.shape}')
@@ -71,6 +81,7 @@ def evaluate_model(model, dataloader, criterion, device):
         for inputs, labels in dataloader:
             inputs, labels = inputs.to(device), labels.to(device)
             outputs = model(inputs)
+            print('Num classes : ', model.num_classes)
             loss = criterion(outputs, nn.functional.one_hot(labels, num_classes=model.num_classes).float())
             running_loss += loss.item()
             _, preds = torch.max(outputs, 1)
@@ -156,8 +167,8 @@ if __name__ == "__main__":
             model_config['DeeperResNetPointNet']['input_size'],
             model_config['DeeperResNetPointNet']['hidden_layer1_size'],
             model_config['DeeperResNetPointNet']['hidden_layer2_size'],
-            model_config['DeeperResNetPointNet']['num_classes'],
-            model_config['DeeperResNetPointNet']['num_res_blocks']
+            num_classes=model_config['DeeperResNetPointNet']['num_classes'],
+            num_res_blocks=model_config['DeeperResNetPointNet']['num_res_blocks']
         )
 
         # model = PointNetPP(num_classes=model_config['model_V5']['num_classes'])

@@ -4,13 +4,21 @@ import pandas as pd
 import numpy as np
 import random
 
+import torch
+from torch.utils.data import Dataset
+import pandas as pd
+import numpy as np
+import random
+
 class PointCloudDataset(Dataset):
     def __init__(self, csv_file, augmentations=None, has_labels=True):
-        self.data = pd.read_csv(csv_file, sep=' ')
+        self.data = pd.read_csv(csv_file, sep=',')
         print("Columns loaded from DataFrame : ", self.data.columns)
         if has_labels:
-            #self.data = self.data.dropna(subset=['Classification'])
             self.data = self.data.dropna()
+            # Vérifiez l'ordre des colonnes et affichez les premières lignes pour validation
+            print(self.data.head())
+
         self.augmentations = augmentations
         self.has_labels = has_labels
 
@@ -19,13 +27,19 @@ class PointCloudDataset(Dataset):
     
     def __getitem__(self, idx):
         sample = self.data.iloc[idx]
-        features = sample[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf',
+        # Vérifiez que les colonnes sont bien extraites
+        print("Sample Extracted: ", sample[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity',
+                                            'Planarity_(0.2)', '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
+                                            'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']])
+
+        features = sample[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity',
                            'Planarity_(0.2)', '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
                            'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']].values
         
         features = features.astype(float)
 
         if self.has_labels:
+            print("Classification before processing: ", sample['Classification'])
             label = sample['Classification']
             try:
                 label = int(label)
@@ -33,8 +47,9 @@ class PointCloudDataset(Dataset):
                 raise ValueError(f"Label is not an integer at index {idx}: {label}")
             return torch.tensor(features, dtype=torch.float32), torch.tensor(label, dtype=torch.long)
         else:
-            # If labels are not available, return only the features
+            print("Features without labels: ", features)
             return torch.tensor(features, dtype=torch.float32)
+
 
     def augment_point_cloud(self, point_cloud):
         if self.augmentations is not None:

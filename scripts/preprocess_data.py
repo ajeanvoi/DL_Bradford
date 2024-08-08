@@ -91,7 +91,7 @@ def preprocess_file(file_path, columns_to_keep):
     data[['Rf', 'Gf', 'Bf']] = (data[['Rf', 'Gf', 'Bf']] - data[['Rf', 'Gf', 'Bf']].mean()) / data[['Rf', 'Gf', 'Bf']].std()
     
     # Arrondir les valeurs
-    data[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf']] = data[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf']].round()
+    data[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf']] = data[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf']].round(4)
     print(f'Preprocessed data shape: {data.shape}')
     
     return data
@@ -124,12 +124,12 @@ def balance_classes(data):
 
 def preprocess_data(input_dir, output_dir, balance=False, isPredicting=False):
     if isPredicting:
-        columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 
+        columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity',
                            'Planarity_(0.2)',
                            '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
                            'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']
     else:
-        columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 
+        columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity',
                            'Planarity_(0.2)', 'Classification',
                            '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
                            'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']

@@ -17,9 +17,9 @@ sys.path.append(repo_path)
 
 # Import des scripts spécifiques
 from data.custom_dataset import PointCloudDataset
-from models.modelV3_augmented import ResNetPointNet  # Utilisation de la version augmentée
+from models.ResNetPointNet import ResNetPointNet  # Utilisation de la version augmentée
 from scripts.sigmoidFocalLoss import SigmoidFocalLoss
-from models.model_V4 import DeeperResNetPointNet
+from models.DeeperResNetPointNet import DeeperResNetPointNet
 
 def evaluate_model(model, dataloader, criterion, device, model_name):
     classes = {
@@ -136,19 +136,19 @@ test_loader = DataLoader(test_dataset, batch_size=dataset_config['dataset']['bat
 # )
 
 model = DeeperResNetPointNet(
-            model_config['model_V4']['input_size'],
-            model_config['model_V4']['hidden_layer1_size'],
-            model_config['model_V4']['hidden_layer2_size'],
-            model_config['model_V4']['num_classes'],
-            model_config['model_V4']['num_res_blocks']
+            model_config['DeeperResNetPointNet']['input_size'],
+            model_config['DeeperResNetPointNet']['hidden_layer1_size'],
+            model_config['DeeperResNetPointNet']['hidden_layer2_size'],
+            model_config['DeeperResNetPointNet']['num_classes'],
+            model_config['DeeperResNetPointNet']['num_res_blocks']
         )
 
-model_name = 'model_V4_FL_alpha_0.250_gamma_2.000.pth'
-checkpoint_path = os.path.join(repo_path, 'checkpoints', f'{model_name}.pth')
+model_name = 'DeeperResNetPointNet_FL_alpha_0.250_gamma_2.500.pth'
+checkpoint_path = os.path.join(repo_path, 'checkpoints', f'{model_name}')
 checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
 model.load_state_dict(checkpoint)
 
-criterion = SigmoidFocalLoss(alpha=0.422, gamma=1.528, reduction='mean')
+criterion = SigmoidFocalLoss(alpha=0.250, gamma=2.500, reduction='mean')
 
 # Évaluer le modèle
 evaluate_model(model, test_loader, criterion, device, model_name)
