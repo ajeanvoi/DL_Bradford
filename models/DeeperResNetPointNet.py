@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class ResNetBlock(nn.Module):
+    ### ResNet block with two fully connected layers and batch normalization
     def __init__(self, in_features, out_features):
         super(ResNetBlock, self).__init__()
         self.fc1 = nn.Linear(in_features, out_features)
@@ -27,6 +28,7 @@ class ResNetBlock(nn.Module):
         return F.relu(out)
 
 class DeeperResNetPointNet(nn.Module):
+    ### Deeper ResNet model for PointNet
     def __init__(self, input_size, hidden_layer1_size, hidden_layer2_size, num_classes, num_res_blocks=4):
         super(DeeperResNetPointNet, self).__init__()
         self.num_classes = num_classes

@@ -13,7 +13,7 @@ sys.path.append(repo_path)
 # Import des scripts spécifiques
 from data.custom_dataset import PointCloudDataset
 # from models.modelV3_augmented import ResNetPointNet  # Utilisation de la version augmentée
-from models.model_V4 import DeeperResNetPointNet  # Utilisation de la version augmentée
+from models.DeeperResNetPointNet import DeeperResNetPointNet  # Utilisation de la version augmentée
 
 def load_raw_data(raw_data_path):
     # Lire les données brutes (non normalisées) depuis le fichier CSV
@@ -87,7 +87,7 @@ if dataset_config['augmentation']['enabled']:
     augmentations = dataset_config['augmentation']['augmentations']
 
 # Charger les données non étiquetées
-test_dataset = PointCloudDataset(dataset_config['dataset']['test_path'], augmentations=augmentations, has_labels=False)
+test_dataset = PointCloudDataset(dataset_config['dataset']['predict_path'], augmentations=augmentations, has_labels=False)
 test_loader = DataLoader(test_dataset, batch_size=dataset_config['dataset']['batch_size'], shuffle=False)
 
 # Charger le modèle

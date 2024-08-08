@@ -1,8 +1,8 @@
 dataset:
   train_path: 'data/processed/train/train_modif.csv'
   val_path: "data/processed/val/validation_modif.csv"
-  # test_path: "DL_Bradford/data/processed/test/V12_UK_dropNaN_pred_processed_good.txt"
-  test_path: "data/processed/test/test_modif.csv"
+  test_path: "DL_Bradford/data/processed/test/V12_UK_dropNaN_pred_processed_good.txt"
+  predict_path: "data/processed/test/test_modif.csv"
   raw_path: "DL_Bradford/data/raw/test/V12_UK_dropNaN_pred.txt"            
   batch_size: 256
 
@@ -14,7 +14,7 @@ augmentation:
       angle_range: [-20, 20]
     - type: 'random_jitter'
       std: 0.01
-    - type: 'random_scale'
-      scale_range: [0.8, 1.2]
+    # - type: 'random_scale'
+    #   scale_range: [0.8, 1.2]
     - type: 'random_dropout'
       drop_rate: 0.3

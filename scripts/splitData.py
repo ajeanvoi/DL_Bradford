@@ -9,8 +9,8 @@ def load_data(csv_path):
 
 def split_data(data):
     """Split data into training, validation, and test sets."""
-    train_data, temp_data = train_test_split(data, test_size=0.4, random_state=42, shuffle=True)
-    val_data, test_data = train_test_split(temp_data, test_size=0.5, random_state=42, shuffle=True)
+    train_data, temp_data = train_test_split(data, test_size=0.4, random_state=42, shuffle=False)
+    val_data, test_data = train_test_split(temp_data, test_size=0.5, random_state=42, shuffle=False)
     return train_data, val_data, test_data
 
 def rename_columns(data):
@@ -35,13 +35,16 @@ if __name__ == "__main__":
 
     # Paths for the data
     csv_path = "DL_Bradford/data/raw/train/V12_UK_dropNaN_train.csv"
-    output_path = "data/rawSplit"
+    output_path = "DL_Bradford/data/rawSplit"
 
     # Les datas seront dans 3 sous dossiers: train, validation et test
     # Création de ces sous dossiers :
     train_path = os.path.join(output_path, "train")
+    os.makedirs(train_path, exist_ok=True)
     val_path = os.path.join(output_path, "val")
+    os.makedirs(val_path, exist_ok=True)
     test_path = os.path.join(output_path, "test")
+    os.makedirs(test_path, exist_ok=True)
 
     data = load_data(csv_path)
     print(f"Loaded data with {len(data)} rows.")

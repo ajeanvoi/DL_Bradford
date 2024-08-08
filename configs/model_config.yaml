@@ -30,7 +30,7 @@ model_V3_augmented:
   learning_rate: 0.0001
   num_epochs: 12
 
-model_V4:
+DeeperResNetPointNet:
   input_size: 13
   hidden_layer1_size: 512
   hidden_layer2_size: 256

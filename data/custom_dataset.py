@@ -7,7 +7,7 @@ import random
 class PointCloudDataset(Dataset):
     def __init__(self, csv_file, augmentations=None, has_labels=True):
         self.data = pd.read_csv(csv_file)
-        print("Colonnes du DataFrame chargé : ", self.data.columns)  # Afficher les colonnes du DataFrame
+        print("Columns loaded from DataFrame : ", self.data.columns)
         if has_labels:
             self.data = self.data.dropna(subset=['Classification'])
         self.augmentations = augmentations
@@ -22,7 +22,7 @@ class PointCloudDataset(Dataset):
                            'Planarity_(0.2)', '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
                            'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']].values
         
-        features = features.astype(float)  # Assurez-vous que les valeurs sont des floats
+        features = features.astype(float)
 
         if self.has_labels:
             label = sample['Classification']
@@ -32,7 +32,7 @@ class PointCloudDataset(Dataset):
                 raise ValueError(f"Label is not an integer at index {idx}: {label}")
             return torch.tensor(features, dtype=torch.float32), torch.tensor(label, dtype=torch.long)
         else:
-            # Si les labels ne sont pas disponibles, retourner uniquement les caractéristiques
+            # If labels are not available, return only the features
             return torch.tensor(features, dtype=torch.float32)
 
     def augment_point_cloud(self, point_cloud):
