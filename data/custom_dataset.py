@@ -6,10 +6,11 @@ import random
 
 class PointCloudDataset(Dataset):
     def __init__(self, csv_file, augmentations=None, has_labels=True):
-        self.data = pd.read_csv(csv_file)
+        self.data = pd.read_csv(csv_file, sep=' ')
         print("Columns loaded from DataFrame : ", self.data.columns)
         if has_labels:
-            self.data = self.data.dropna(subset=['Classification'])
+            #self.data = self.data.dropna(subset=['Classification'])
+            self.data = self.data.dropna()
         self.augmentations = augmentations
         self.has_labels = has_labels
 

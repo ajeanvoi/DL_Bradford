@@ -59,7 +59,7 @@ def preprocess_file(file_path, columns_to_keep):
     print(f'Initial data shape: {data.shape}')
     print(f'Initial columns: {data.columns.tolist()}')
     
-    column_names = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Original_cloud_index',
+    column_names = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity', 'Original_cloud_index',
                     'Classification', 'Surface_variation_(0.1)', 'Verticality_(0.1)',
                     'Planarity_(0.1)', 'PCA2_(0.1)', 'PCA1_(0.1)', '1st_eigenvalue_(0.2)', 
                     '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)', 'Omnivariance_(0.2)', 
@@ -134,7 +134,7 @@ def preprocess_data(input_dir, output_dir, balance=False, isPredicting=False):
                            '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
                            'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']
     
-    print(f'Processing files in {input_dir}, saving to {output_dir}, balance={balance}, isTesting={isTesting}')
+    print(f'Processing files in {input_dir}, saving to {output_dir}, balance={balance}, isPredicting={isPredicting}')
     for file_name in os.listdir(input_dir):
         file_path = os.path.join(input_dir, file_name)
         if os.path.isdir(file_path):
@@ -171,7 +171,7 @@ if __name__ == "__main__":
 
     # Preprocess validation data
     print('Preprocessing validation data...')
-    preprocess_data(os.path.join(raw_data_dir, 'validation'), os.path.join(processed_data_dir, 'validation'))
+    preprocess_data(os.path.join(raw_data_dir, 'val'), os.path.join(processed_data_dir, 'val'))
 
     # Preprocessing predict data
     print('Preprocessing predict data...')

@@ -23,7 +23,7 @@ from models.modelV2 import ImprovedPointNet
 from models.DeeperResNetPointNet import DeeperResNetPointNet
 
 
-# Utilisation : python scripts/train_with_augmentation.py --alpha 0.285 --gamma 2.158
+# Utilisation : python scripts/train.py --alpha 0.285 --gamma 2.158
 
 def train_model(model, dataloader, criterion, optimizer, num_epochs, device):
     print('Training model:')
