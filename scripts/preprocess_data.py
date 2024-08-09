@@ -55,27 +55,28 @@ def load_data(input_dir):
 
 def preprocess_file(file_path, columns_to_keep):
     print(f'Preprocessing file: {file_path}')
-    data = pd.read_csv(file_path, skiprows=1, header=None, sep=' ')
+    data = pd.read_csv(file_path, sep=' ')
     print(f'Initial data shape: {data.shape}')
     print(f'Initial columns: {data.columns.tolist()}')
     
-    column_names = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity', 'Original_cloud_index',
-                    'Classification', 'Surface_variation_(0.1)', 'Verticality_(0.1)',
-                    'Planarity_(0.1)', 'PCA2_(0.1)', 'PCA1_(0.1)', '1st_eigenvalue_(0.2)', 
-                    '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)', 'Omnivariance_(0.2)', 
-                    'Planarity_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 
-                    'Verticality_(0.2)', 'Nx', 'Ny', 'Nz']
+    # column_names = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity', 'Classification', 'Original_cloud_index',
+    #                 'Planarity_(0.1)','Omnivariance_(0.2)','Planarity_(0.2)', 'Surface_variation_(0.2)', 'Verticality_(0.2)',
+    #                 'Sphericity_(0.2)', 'PCA2_(0.1)', 'PCA1_(0.1)', 
+    #                 '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)', 
+    #                 'Planarity_(0.2)', 'Surface_variation_(0.2)', 
+    #                 'Verticality_(0.2)', 'Nx', 'Ny', 'Nz']
     
     # Vérifier si le nombre de colonnes correspond
-    if len(data.columns) != len(column_names):
-        print(f"Warning: Number of columns in data ({len(data.columns)}) does not match column names list ({len(column_names)}). Adjusting column names list.")
+    # if len(data.columns) != len(column_names):
+    #     print(f"Warning: Number of columns in data ({len(data.columns)}) does not match column names list ({len(column_names)}). Adjusting column names list.")
     
     # Ajuster les noms des colonnes en fonction du nombre réel de colonnes
-    data.columns = column_names[:len(data.columns)]
-    print(f'Columns after renaming: {data.columns.tolist()}')
+    # data.columns = column_names[:len(data.columns)]
+    # print(f'Columns after renaming: {data.columns.tolist()}')
     
     data = data[columns_to_keep]
     print(f'Data shape after selecting columns: {data.shape}')
+    print(f'Columns after selection: {data.columns.tolist()}')
     #data = data.dropna()
 
     # Modification sur les données raw
@@ -84,7 +85,7 @@ def preprocess_file(file_path, columns_to_keep):
     # data.dropna(inplace=True)
     # data.reset_index(drop=True, inplace=True)
 
-    print(f'Data shape after dropping NA: {data.shape}')
+    #print(f'Data shape after dropping NA: {data.shape}')
     
     # Normaliser les coordonnées et les couleurs
     data[['//X', 'Y', 'Z']] = (data[['//X', 'Y', 'Z']] - data[['//X', 'Y', 'Z']].mean()) / data[['//X', 'Y', 'Z']].std()
