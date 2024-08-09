@@ -28,9 +28,9 @@ class PointCloudDataset(Dataset):
     def __getitem__(self, idx):
         sample = self.data.iloc[idx]
         # Vérifiez que les colonnes sont bien extraites
-        print("Sample Extracted: ", sample[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity',
-                                            'Planarity_(0.2)', '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
-                                            'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']])
+        # print("Sample Extracted: ", sample[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity',
+        #                                     'Planarity_(0.2)', '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
+        #                                     'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']])
 
         features = sample[['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity',
                            'Planarity_(0.2)', '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
@@ -39,7 +39,7 @@ class PointCloudDataset(Dataset):
         features = features.astype(float)
 
         if self.has_labels:
-            print("Classification before processing: ", sample['Classification'])
+            #print("Classification before processing: ", sample['Classification'])
             label = sample['Classification']
             try:
                 label = int(label)
@@ -47,7 +47,7 @@ class PointCloudDataset(Dataset):
                 raise ValueError(f"Label is not an integer at index {idx}: {label}")
             return torch.tensor(features, dtype=torch.float32), torch.tensor(label, dtype=torch.long)
         else:
-            print("Features without labels: ", features)
+            #print("Features without labels: ", features)
             return torch.tensor(features, dtype=torch.float32)
 
 

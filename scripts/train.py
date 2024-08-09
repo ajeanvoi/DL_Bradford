@@ -39,15 +39,15 @@ def train_model(model, dataloader, criterion, optimizer, num_epochs, device):
         for inputs, labels in dataloader:
             inputs, labels = inputs.to(device), labels.to(device)
 
-            print('Num classes : ', model.num_classes)
+            #print('Num classes : ', model.num_classes)
 
             # Labels should be in the range [0, num_classes - 1]
             if labels.max() >= model.num_classes or labels.min() < 0:
                 print("Labels max : ", labels.max())
                 print("Labels min : ", labels.min())
                 raise ValueError(f"Labels out of bounds: found labels outside the range [0, {model.num_classes - 1}]")
-            else:
-                print(f'Labels in range [0, {model.num_classes - 1}]')
+            # else:
+            #     print(f'Labels in range [0, {model.num_classes - 1}]')
             labels = nn.functional.one_hot(labels, num_classes=model.num_classes).float()
             # print(f'Input shape: {inputs.shape}')
             # print(f'Labels shape: {labels.shape}')
