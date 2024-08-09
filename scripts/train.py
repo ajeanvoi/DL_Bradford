@@ -81,7 +81,7 @@ def evaluate_model(model, dataloader, criterion, device):
         for inputs, labels in dataloader:
             inputs, labels = inputs.to(device), labels.to(device)
             outputs = model(inputs)
-            print('Num classes : ', model.num_classes)
+            #print('Num classes : ', model.num_classes)
             loss = criterion(outputs, nn.functional.one_hot(labels, num_classes=model.num_classes).float())
             running_loss += loss.item()
             _, preds = torch.max(outputs, 1)
