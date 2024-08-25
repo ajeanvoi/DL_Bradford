@@ -1,20 +1,20 @@
 dataset:
-  train_path: 'DL_Bradford/data/processed/train/V13_feat_train_bis.txt'
-  val_path: "DL_Bradford/data/processed/val/V13_feat_val.txt"
-  test_path: "DL_Bradford/data/processed/test/V13_feat_test.txt"
-  predict_path: "DL_Bradford/data/processed/predict/V13_feat_pred.txt"
-  raw_path: "DL_Bradford/data/raw/test/V12_UK_dropNaN_pred.txt"            
-  batch_size: 256
+  train_path: 'DL_Bradford/data/processed/train/train.csv'
+  val_path: "DL_Bradford/data/processed/val/val.csv"
+  test_path: "DL_Bradford/data/processed/test/V17_IT_test_feat.txt"
+  predict_path: "DL_Bradford/data/processed/predict/V17_IT_pred_feat.txt"
+  raw_path: "DL_Bradford/data/raw/predict/V17_IT_pred_feat.txt"            
+  batch_size: 512
 
 augmentation:
   enabled: true
   augmentations:
-    # - type: 'random_rotation'
-    #   axis: 'z'
-    #   angle_range: [-20, 20]
+    - type: 'random_rotation'
+      axis: 'z'
+      angle_range: [-10, 10]
     - type: 'random_jitter'
       std: 0.01
-    # - type: 'random_scale'
-    #   scale_range: [0.8, 1.2]
-    - type: 'random_dropout'
-      drop_rate: 0.1
+    - type: 'random_scale'
+      scale_range: [0.8, 1.2]
+    # - type: 'random_dropout'
+    #   drop_rate: 0.1

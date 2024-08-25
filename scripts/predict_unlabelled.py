@@ -99,15 +99,15 @@ test_loader = DataLoader(test_dataset, batch_size=dataset_config['dataset']['bat
 # )
 
 model = DeeperResNetPointNet(
-    model_config['model_V4']['input_size'],
-    model_config['model_V4']['hidden_layer1_size'],
-    model_config['model_V4']['hidden_layer2_size'],
-    model_config['model_V4']['num_classes'],
-    model_config['model_V4']['num_res_blocks']
+    model_config['DeeperResNetPointNet']['input_size'],
+    model_config['DeeperResNetPointNet']['hidden_layer1_size'],
+    model_config['DeeperResNetPointNet']['hidden_layer2_size'],
+    model_config['DeeperResNetPointNet']['num_classes'],
+    model_config['DeeperResNetPointNet']['num_res_blocks']
 )
 
 # Charger les poids du modèle
-model_name = 'model_' + str(model_config['model_V4']['num_res_blocks']) + '_FL_alpha_0.250_gamma_2.000'
+model_name = 'DeeperResNetPointNet_FL_alpha_0.250_gamma_2.000'
 checkpoint_path = os.path.join(repo_path, 'checkpoints', f'{model_name}.pth')
 checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
 model.load_state_dict(checkpoint)

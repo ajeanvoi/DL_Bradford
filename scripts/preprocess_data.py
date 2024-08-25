@@ -53,9 +53,9 @@ def load_data(input_dir):
 #     else:
 #         print(f"Error: 'Classification' column not found in data for {title}")
 
-def preprocess_file(file_path, columns_to_keep):
+def preprocess_file(file_path, columns_to_keep, separator=' '):
     print(f'Preprocessing file: {file_path}')
-    data = pd.read_csv(file_path, sep=' ')
+    data = pd.read_csv(file_path, sep=separator)
     print(f'Initial data shape: {data.shape}')
     print(f'Initial columns: {data.columns.tolist()}')
     
@@ -123,17 +123,21 @@ def balance_classes(data):
     print(f'Balanced data shape: {balanced_data.shape}')
     return balanced_data
 
-def preprocess_data(input_dir, output_dir, balance=False, isPredicting=False):
+def preprocess_data(input_dir, output_dir, balance=False, isPredicting=False, separator=' '):
     if isPredicting:
-        columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity',
+        columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf',
                            'Planarity_(0.2)',
                            '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
                            'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']
+        # Pour DGCNN
+        #columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity']
     else:
-        columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity',
+        columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf',
                            'Planarity_(0.2)', 'Classification',
                            '2nd_eigenvalue_(0.2)', '3rd_eigenvalue_(0.2)',
                            'Omnivariance_(0.2)', 'Surface_variation_(0.2)', 'Sphericity_(0.2)', 'Verticality_(0.2)']
+        # Pour DGCNN
+        #columns_to_keep = ['//X', 'Y', 'Z', 'Rf', 'Gf', 'Bf', 'Intensity', 'Classification']
     
     print(f'Processing files in {input_dir}, saving to {output_dir}, balance={balance}, isPredicting={isPredicting}')
     for file_name in os.listdir(input_dir):
@@ -145,7 +149,7 @@ def preprocess_data(input_dir, output_dir, balance=False, isPredicting=False):
             print(f'Skipping file: {file_path}')
             continue
         print(f'Processing file: {file_path}')
-        data = preprocess_file(file_path, columns_to_keep)
+        data = preprocess_file(file_path, columns_to_keep, separator=separator)
         if balance:
             print(f'Balancing classes for file: {file_name}')
             data = balance_classes(data)
@@ -156,6 +160,7 @@ def preprocess_data(input_dir, output_dir, balance=False, isPredicting=False):
 if __name__ == "__main__":
     # Path assuming that you clone the repository in /content
     base_dir = '/content/DL_Bradford'
+    #base_dir = ''
     raw_data_dir = os.path.join(base_dir, 'data/raw')
     processed_data_dir = os.path.join(base_dir, 'data/processed')
     visualization_dir = os.path.join(base_dir, 'results/visualizations')
@@ -168,11 +173,11 @@ if __name__ == "__main__":
 
     # Preprocess train data, if balance=True, the classes will be balanced
     print('Preprocessing train data...')
-    preprocess_data(os.path.join(raw_data_dir, 'train'), os.path.join(processed_data_dir, 'train'), balance=False)
+    preprocess_data(os.path.join(raw_data_dir, 'train'), os.path.join(processed_data_dir, 'train'), balance=False, separator=',')
 
     # Preprocess validation data
     print('Preprocessing validation data...')
-    preprocess_data(os.path.join(raw_data_dir, 'val'), os.path.join(processed_data_dir, 'val'))
+    preprocess_data(os.path.join(raw_data_dir, 'val'), os.path.join(processed_data_dir, 'val'), separator=',')
 
     # Preprocessing predict data
     print('Preprocessing predict data...')

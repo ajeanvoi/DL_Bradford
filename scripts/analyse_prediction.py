@@ -29,13 +29,13 @@ def analyze_class_distribution(predictions_path, output_plot_path):
     plt.savefig(output_plot_path)
     plt.show()
 
-model_name = 'model_V4_FL_alpha_0.200_gamma_2.000'
+model_name = 'DeeperResNetPointNet_FL_alpha_0.250_gamma_2.000'
 
 # Chemin vers le fichier de prédictions
-predictions_path = 'results/predictions/last_predictions_unlabelled_' + model_name + '_.csv'
+predictions_path = 'results/predictions/last_predictions_unlabelled_' + model_name + '.csv'
 
 # Chemin pour sauvegarder le graphique
-output_plot_path = 'results/predictions/last_class_distribution_' + model_name + '_.png'
+output_plot_path = 'results/predictions/last_class_distribution_' + model_name + '.png'
 
 # Analyser la distribution des classes
 analyze_class_distribution(predictions_path, output_plot_path)

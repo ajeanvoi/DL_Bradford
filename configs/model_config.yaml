@@ -31,7 +31,7 @@ model_V3_augmented:
   num_epochs: 12
 
 DeeperResNetPointNet:
-  input_size: 14
+  input_size: 13
   hidden_layer1_size: 256
   hidden_layer2_size: 128
   num_classes: 10
@@ -39,7 +39,27 @@ DeeperResNetPointNet:
   num_epochs: 15
   num_res_blocks: 3
   dropout_rate: 0.3
-  activation: 'relu'
+  activation: 'leaky_ReLu'
+
+DGCNN:
+  k: 20
+  input_size: 7
+  emb_dims: 1024
+  num_classes: 10
+  dropout_rate: 0.3
+  learning_rate: 0.001
+  num_epochs: 20
+
+RSConv:
+  input_size: 7
+  num_classes: 10
+  learning_rate: 0.001
+  num_epochs: 20
+  npoint: 1024
+  radii: [0.1, 0.2, 0.4]
+  nsample: [32, 64, 128]
+  down_conv_nn: [64, 128, 256]
+  channel_raising_nn: [256, 256, 512]    
 
 model_V5:
   input_size: 13

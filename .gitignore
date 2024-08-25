@@ -161,3 +161,11 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 data/raw/test/V12_UK_feat_pred.csv
+data/processed/predict/V13_feat_pred.txt
+data/processed/test/V13_feat_test.txt
+data/processed/train/V13_feat_train_bis.txt
+data/processed/val/V13_feat_val.txt
+data/raw/predict/V13_feat_pred.txt
+data/raw/test/V13_feat_test.txt
+data/raw/train/V13_feat_train_bis.txt
+data/raw/val/V13_feat_val.txt
