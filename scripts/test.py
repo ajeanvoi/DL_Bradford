@@ -129,12 +129,12 @@ test_dataset = PointCloudDataset(dataset_config['dataset']['test_path'], augment
 test_loader = DataLoader(test_dataset, batch_size=dataset_config['dataset']['batch_size'], shuffle=False)
 
 # Charger le modèle
-# model = ResNetPointNet(
-#     model_config['model_V3_augmented']['input_size'],
-#     model_config['model_V3_augmented']['hidden_layer1_size'],
-#     model_config['model_V3_augmented']['hidden_layer2_size'],
-#     model_config['model_V3_augmented']['num_classes']
-# )
+model = ResNetPointNet(
+    model_config['model_V3_augmented']['input_size'],
+    model_config['model_V3_augmented']['hidden_layer1_size'],
+    model_config['model_V3_augmented']['hidden_layer2_size'],
+    model_config['model_V3_augmented']['num_classes']
+)
 
 # model = DeeperResNetPointNet(
 #             model_config['DeeperResNetPointNet']['input_size'],
@@ -144,7 +144,7 @@ test_loader = DataLoader(test_dataset, batch_size=dataset_config['dataset']['bat
 #             model_config['DeeperResNetPointNet']['num_res_blocks']
 #         )
 
-model = DGCNN()
+#model = DGCNN()
 
 model_name = 'DGCNN_FL_alpha_0.250_gamma_2.500.pth'
 checkpoint_path = os.path.join(repo_path, 'checkpoints', f'{model_name}')

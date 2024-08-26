@@ -64,6 +64,8 @@ class PointCloudDataset(Dataset):
                     point_cloud = self.random_jitter(point_cloud, aug['std'])
                 elif aug['type'] == 'random_scale':
                     point_cloud = self.random_scale(point_cloud, aug['scale_range'])
+                elif aug['type'] == 'random_color_jitter':
+                    point_cloud = self.random_color_jitter(point_cloud, aug['color_range'])
                 # elif aug['type'] == 'random_dropout':
                 #     point_cloud = self.random_dropout(point_cloud, aug['drop_rate'])
         return point_cloud
@@ -93,6 +95,13 @@ class PointCloudDataset(Dataset):
         point_cloud[:3] *= scale
         return point_cloud
 
+    # Ajoute une perturbation aléatoire aux composantes de couleur normalisées
+    def random_color_jitter(self, point_cloud, color_range):
+        color_jitter = np.random.uniform(-color_range, color_range, point_cloud[3:6].shape)
+        point_cloud[3:6] += color_jitter
+        return point_cloud
+
+    
     # not working
     # def random_dropout(self, point_cloud, drop_rate):
     #     num_points = point_cloud.shape[0]

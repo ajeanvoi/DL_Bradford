@@ -16,5 +16,7 @@ augmentation:
       std: 0.01
     - type: 'random_scale'
       scale_range: [0.8, 1.2]
+    - type: 'random_color_jitter'
+      color_range: 0.1
     # - type: 'random_dropout'
     #   drop_rate: 0.1

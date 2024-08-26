@@ -12,12 +12,12 @@ import numpy as np
 import os
 import sys
 # Ajouter le chemin du dépôt cloné au sys.path
-# repo_path = '/content/DL_Bradford'
-# sys.path.append(repo_path)
+repo_path = '/content/DL_Bradford'
+sys.path.append(repo_path)
 
 # Only for local testing
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-repo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# repo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 # Import des scripts spécifiques
 from scripts.sigmoidFocalLoss import SigmoidFocalLoss
@@ -25,8 +25,8 @@ from data.custom_dataset import PointCloudDataset
 from models.my_model import PointNet
 from models.modelV2 import ImprovedPointNet
 from models.DeeperResNetPointNet import DeeperResNetPointNet
-from models.DGCNN import DGCNN
-from models.RSConv import RSConvSharedMSGDown
+# from models.DGCNN import DGCNN
+# from models.RSConv import RSConvSharedMSGDown
 
 # Utilisation : python scripts/train.py --alpha 0.285 --gamma 2.158
 
@@ -65,6 +65,15 @@ def train_model(model, dataloader, criterion, optimizer, num_epochs, device):
 
         epoch_time = time.time() - start_time
         print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {running_loss/len(dataloader)}, Time: {epoch_time:.2f} seconds')
+
+        save_path = os.path.join(
+            repo_path, 'checkpoints/myModel/')
+        
+        os.makedirs(save_path, exist_ok=True)
+
+        model_save_path = os.path.join(save_path, f'model_epoch_{epoch+1}.pth')
+
+        torch.save(model.state_dict(), model_save_path)
 
         if running_loss / len(dataloader) > prev_loss:
             print('Loss did not decrease, stopping training')
@@ -168,28 +177,28 @@ if __name__ == "__main__":
         #     model_config['model_V3_augmented']['num_classes']
         # )
 
-        # model = DeeperResNetPointNet(
-        #     model_config['DeeperResNetPointNet']['input_size'],
-        #     model_config['DeeperResNetPointNet']['hidden_layer1_size'],
-        #     model_config['DeeperResNetPointNet']['hidden_layer2_size'],
-        #     num_classes=model_config['DeeperResNetPointNet']['num_classes'],
-        #     num_res_blocks=model_config['DeeperResNetPointNet']['num_res_blocks']
-        # )
+        model = DeeperResNetPointNet(
+            model_config['DeeperResNetPointNet']['input_size'],
+            model_config['DeeperResNetPointNet']['hidden_layer1_size'],
+            model_config['DeeperResNetPointNet']['hidden_layer2_size'],
+            num_classes=model_config['DeeperResNetPointNet']['num_classes'],
+            num_res_blocks=model_config['DeeperResNetPointNet']['num_res_blocks']
+        )
 
         #model = DGCNN()
 
         # model = PointNetPP(num_classes=model_config['model_V5']['num_classes'])
 
-        model = RSConvSharedMSGDown(
-            npoint=model_config['RSConv']['npoint'],
-            radii=model_config['RSConv']['radii'],
-            nsample=model_config['RSConv']['nsample'],
-            down_conv_nn=model_config['RSConv']['down_conv_nn'],
-            channel_raising_nn=model_config['RSConv']['channel_raising_nn'],
-            bn=True,
-            use_xyz=True,
-            activation=nn.ReLU()
-        )
+        # model = RSConvSharedMSGDown(
+        #     npoint=model_config['RSConv']['npoint'],
+        #     radii=model_config['RSConv']['radii'],
+        #     nsample=model_config['RSConv']['nsample'],
+        #     down_conv_nn=model_config['RSConv']['down_conv_nn'],
+        #     channel_raising_nn=model_config['RSConv']['channel_raising_nn'],
+        #     bn=True,
+        #     use_xyz=True,
+        #     activation=nn.ReLU()
+        # )
 
         criterion = SigmoidFocalLoss(alpha=alpha, gamma=gamma, reduction='mean')
         #criterion = nn.CrossEntropyLoss()
@@ -204,7 +213,7 @@ if __name__ == "__main__":
         # Save each model with alpha, gamma, balanced_accuracy, and f1 in the filename
         model_save_path = os.path.join(
             # save_path, f'model_FL_alpha_{alpha:.3f}_gamma_{gamma:.3f}_BA_{val_balanced_acc:.4f}_F1_{val_f1:.4f}.pth')
-            save_path, f'DGCNN_FL_{alpha:.3f}_gamma_{gamma:.3f}.pth')
+            save_path, f'DeeperResNet_FL_{alpha:.3f}_gamma_{gamma:.3f}.pth')
         torch.save(model.state_dict(), model_save_path)
         print('Model saved to ' + model_save_path)
         
