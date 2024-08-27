@@ -20,7 +20,7 @@ from data.custom_dataset import PointCloudDataset
 from models.ResNetPointNet import ResNetPointNet  # Utilisation de la version augmentée
 from scripts.sigmoidFocalLoss import SigmoidFocalLoss
 from models.DeeperResNetPointNet import DeeperResNetPointNet
-from models.DGCNN import DGCNN
+#from models.DGCNN import DGCNN
 
 def evaluate_model(model, dataloader, criterion, device, model_name):
     classes = {
@@ -28,13 +28,25 @@ def evaluate_model(model, dataloader, criterion, device, model_name):
         'columns': 1,
         'moldings': 2,
         'floor': 3,
-        'window': 4,
+        'door & window': 4,
         'wall': 5,
         'stairs': 6,
-        'door': 7,
+        'vault': 7,
         'roof': 8,
         'other': 9,
     }
+    # classes = {
+    # 0: 'arch',
+    # 1: 'columns',
+    # 2: 'moldings',
+    # 3: 'floor',
+    # 4: 'door & window',
+    # 5: 'wall',
+    # 6: 'stairs',
+    # 7: 'vault',
+    # 8: 'roof',
+    # 9: 'other',
+    # }
 
     classes_reverse = {v: k for k, v in classes.items()}
     model.to(device)
@@ -129,29 +141,29 @@ test_dataset = PointCloudDataset(dataset_config['dataset']['test_path'], augment
 test_loader = DataLoader(test_dataset, batch_size=dataset_config['dataset']['batch_size'], shuffle=False)
 
 # Charger le modèle
-model = ResNetPointNet(
-    model_config['model_V3_augmented']['input_size'],
-    model_config['model_V3_augmented']['hidden_layer1_size'],
-    model_config['model_V3_augmented']['hidden_layer2_size'],
-    model_config['model_V3_augmented']['num_classes']
-)
+# model = ResNetPointNet(
+#     model_config['model_V3_augmented']['input_size'],
+#     model_config['model_V3_augmented']['hidden_layer1_size'],
+#     model_config['model_V3_augmented']['hidden_layer2_size'],
+#     model_config['model_V3_augmented']['num_classes']
+# )
 
-# model = DeeperResNetPointNet(
-#             model_config['DeeperResNetPointNet']['input_size'],
-#             model_config['DeeperResNetPointNet']['hidden_layer1_size'],
-#             model_config['DeeperResNetPointNet']['hidden_layer2_size'],
-#             model_config['DeeperResNetPointNet']['num_classes'],
-#             model_config['DeeperResNetPointNet']['num_res_blocks']
-#         )
+model = DeeperResNetPointNet(
+            model_config['DeeperResNetPointNet']['input_size'],
+            model_config['DeeperResNetPointNet']['hidden_layer1_size'],
+            model_config['DeeperResNetPointNet']['hidden_layer2_size'],
+            model_config['DeeperResNetPointNet']['num_classes'],
+            model_config['DeeperResNetPointNet']['num_res_blocks']
+        )
 
 #model = DGCNN()
 
-model_name = 'DGCNN_FL_alpha_0.250_gamma_2.500.pth'
-checkpoint_path = os.path.join(repo_path, 'checkpoints', f'{model_name}')
+model_name = 'DeeperResNet_FL_0.200_gamma_2.000'
+checkpoint_path = os.path.join(repo_path, 'checkpoints', f'{model_name}.pth')
 checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
 model.load_state_dict(checkpoint)
 
-criterion = SigmoidFocalLoss(alpha=0.250, gamma=2.500, reduction='mean')
+criterion = SigmoidFocalLoss(alpha=0.200, gamma=2.000, reduction='mean')
 
 # Évaluer le modèle
 evaluate_model(model, test_loader, criterion, device, model_name)
